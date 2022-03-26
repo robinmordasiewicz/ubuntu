@@ -6,4 +6,4 @@ kubectl describe pod ubuntu -n r-mordasiewicz
 
 kubectl logs ubuntu -c ubuntu -n r-mordasiewicz
 
-kubectl exec --namespace r-mordasiewicz -it ubuntu -- /bin/bash
+kubectl exec --namespace r-mordasiewicz -it ubuntu -c ubuntu -- /bin/bash
