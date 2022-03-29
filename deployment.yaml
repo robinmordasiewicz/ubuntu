@@ -6,10 +6,10 @@ metadata:
     app: ubuntu
 spec:
   containers:
-  - image: robinhoodis/ubuntu:0.0.1
+  - image: robinhoodis/ubuntu:0.0.9
     command:
       - "sleep"
-      - "604800"
+      - "0.0.90"
     imagePullPolicy: Always
     name: ubuntu
   restartPolicy: Always
