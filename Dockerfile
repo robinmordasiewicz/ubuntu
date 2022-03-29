@@ -6,3 +6,10 @@ RUN apt-get --yes update \
 
 RUN curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64 \
     && chmod +x /usr/local/bin/argocd
+
+RUN apt-get install -y apt-transport-https ca-certificates curl \
+    && curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg \
+    && echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" > /etc/apt/sources.list.d/kubernetes.list \
+    && apt-get --yes update \
+    && apt-get install -y kubectl
+
