@@ -27,3 +27,4 @@ docker tag $USERNAME/$IMAGE:latest $USERNAME/$IMAGE:$version
 # push it
 docker push $USERNAME/$IMAGE:latest
 docker push $USERNAME/$IMAGE:$version
+git add . && git commit -m "creating skel" &&  git push
