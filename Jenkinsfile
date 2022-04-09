@@ -68,7 +68,7 @@ pipeline {
     }
     stage('clean up') {
       steps {
-        sh 'rm VERSION.sha256.tmp'
+        sh '[ -f VERSION.sha256.tmp ] && rm VERSION.sha256.tmp'
       }
     }
     stage('git-commit') {
