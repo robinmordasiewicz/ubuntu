@@ -41,6 +41,7 @@ pipeline {
         container('ubuntu') {
           sh 'skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` && skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` | jq ".Digest" > VERSION.sha256 || echo "create new container: `cat VERSION`" > VERSION.sha256.tmp'
         }
+        sh 'ls -al'
       }
     }
     stage('Push Container') {
