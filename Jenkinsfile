@@ -9,6 +9,11 @@ pipeline {
         kind: Pod
         spec:
           containers:
+          - name: ubuntu
+            image: robinhoodis/ubuntu:latest
+            command:
+            - cat
+            tty: true
           - name: kaniko
             image: gcr.io/kaniko-project/executor:debug
             imagePullPolicy: IfNotPresent
@@ -30,6 +35,13 @@ pipeline {
     }
   }
   stages {
+    stage('Get sha256 of version') {
+      steps {
+        container('ubuntu') {
+          skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` | jq '.Digest' > VERSION.sha256
+        }
+      }
+    }
     stage('Push Container') {
       steps {
         container(name: 'kaniko', shell: '/busybox/sh') {
