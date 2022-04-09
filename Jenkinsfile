@@ -62,11 +62,11 @@ pipeline {
     }
     stage('Get sha') {
       steps {
+        sh 'git status'
         container('ubuntu') {
-          sh 'git status'
           sh 'skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` > /dev/null && skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` | jq ".Digest" > VERSION.sha256 || echo "create new container: `cat VERSION`" > VERSION.sha256'
-          sh 'git status'
         }
+        sh 'git status'
       }
     }
     stage('clean up') {
