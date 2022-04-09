@@ -64,9 +64,11 @@ pipeline {
     stage('Get sha') {
       when { changeset "VERSION.sha256"}
       steps {
+          sh 'cat VERSION.sha256'
         container('ubuntu') {
           sh 'skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` > /dev/null && skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` | jq ".Digest" > VERSION.sha256 || echo "create new container: `cat VERSION`" > VERSION.sha256'
         }
+          sh 'cat VERSION.sha256'
       }
     }
     stage('git-commit') {
