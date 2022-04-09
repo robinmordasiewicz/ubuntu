@@ -77,13 +77,9 @@ pipeline {
         sh 'git config user.email "robin@mordasiewicz.com"'
         sh 'git config user.name "Robin Mordasiewicz"'
         sh 'git add -A'
-        // sh 'git diff --quiet && git diff --staged --quiet || git commit -am "New Container HASH: `cat VERSION`"'
-        sh 'git diff'
-        sh 'git diff --staged '
-        sh 'git commit -am "New Container HASH: `cat VERSION`"'
+        sh 'git diff --quiet && git diff --staged --quiet || git commit -am "New Container HASH: `cat VERSION`"'
         withCredentials([gitUsernamePassword(credentialsId: 'github-pat', gitToolName: 'git')]) {
-          // sh 'git diff --quiet && git diff --staged --quiet || git push'
-          sh 'git push'
+          sh 'git diff --quiet && git diff --staged --quiet || git push origin main'
         }
       }
     }
