@@ -46,14 +46,12 @@ pipeline {
     }
     stage('git-commit') {
       steps {
-        dir ( 'nginx' ) {
-          sh 'git config user.email "robin@mordasiewicz.com"'
-          sh 'git config user.name "Robin Mordasiewicz"'
-          sh 'git add -A'
-          sh 'git diff --quiet && git diff --staged --quiet || git commit -am "New HTML: `date`"'
-          withCredentials([gitUsernamePassword(credentialsId: 'github-pat', gitToolName: 'git')]) {
-            sh 'git diff --quiet && git diff --staged --quiet || git push'
-          }
+        sh 'git config user.email "robin@mordasiewicz.com"'
+        sh 'git config user.name "Robin Mordasiewicz"'
+        sh 'git add -A'
+        sh 'git diff --quiet && git diff --staged --quiet || git commit -am "New HTML: `date`"'
+        withCredentials([gitUsernamePassword(credentialsId: 'github-pat', gitToolName: 'git')]) {
+          sh 'git diff --quiet && git diff --staged --quiet || git push'
         }
       }
     }
