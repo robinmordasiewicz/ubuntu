@@ -82,7 +82,7 @@ pipeline {
         sh 'git config user.name "Robin Mordasiewicz"'
         sh 'git add .'
         // sh 'git diff --quiet && git diff --staged --quiet || git commit -am "New Container HASH: `cat VERSION`"'
-        sh 'git commit -m "New Container HASH: `cat VERSION`"'
+        sh 'git commit -m "`cat VERSION`"'
         withCredentials([gitUsernamePassword(credentialsId: 'github-pat', gitToolName: 'git')]) {
           // sh 'git diff --quiet && git diff --staged --quiet || git push origin main'
           // sh 'git push origin main'
