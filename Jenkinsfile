@@ -11,6 +11,7 @@ pipeline {
           containers:
           - name: ubuntu
             image: robinhoodis/ubuntu:latest
+            imagePullPolicy: Always
             command:
             - cat
             tty: true
@@ -35,13 +36,13 @@ pipeline {
     }
   }
   stages {
-    stage('Get sha256 of version') {
-      steps {
-        container('ubuntu') {
-          skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` | jq '.Digest' > VERSION.sha256
-        }
-      }
-    }
+//    stage('Get sha256 of version') {
+//      steps {
+//        container('ubuntu') {
+//          skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` | jq '.Digest' > VERSION.sha256
+//        }
+//      }
+//    }
     stage('Push Container') {
       steps {
         container(name: 'kaniko', shell: '/busybox/sh') {
