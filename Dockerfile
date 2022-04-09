@@ -24,6 +24,6 @@ RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/s
     && chmod 700 get_helm.sh \
     && ./get_helm.sh \
     && rm get_helm.sh \
-    && helm repo add jenkinsci https://charts.jenkins.io \
+    && helm repo add robinmordasiewicz https://robinmordasiewicz.github.io/helm-charts \
     && helm repo update
 
