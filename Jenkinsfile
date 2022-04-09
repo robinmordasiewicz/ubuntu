@@ -69,7 +69,6 @@ pipeline {
     stage('clean up') {
       steps {
         sh '[ -f VERSION.sha256.tmp ] && rm VERSION.sha256.tmp'
-        sh 'echo "`date`" > datefile.txt'
       }
     }
     stage('git-commit') {
