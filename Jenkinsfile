@@ -39,12 +39,12 @@ pipeline {
     stage('Check repo to see if container is absent') {
       steps {
         container('ubuntu') {
-          sh 'skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` > /dev/null && skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` | jq ".Digest" > VERSION.sha256 || echo "create new container: `cat VERSION`" > VERSION.sha256.tmp'
+          sh 'skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` > /dev/null && skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` | jq ".Digest" > VERSION.sha256 || echo "create new container: `cat VERSION`" > VERSION.sha256'
         }
       }
     }
     stage('Push Container') {
-      when { changeset "**"}
+      when { changeset "VERSION.sha256"}
       steps {
         container(name: 'kaniko', shell: '/busybox/sh') {
           script {
@@ -60,18 +60,15 @@ pipeline {
       }
     }
     stage('Get sha') {
+      when { changeset "VERSION.sha256"}
       steps {
         container('ubuntu') {
           sh 'skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` > /dev/null && skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` | jq ".Digest" > VERSION.sha256 || echo "create new container: `cat VERSION`" > VERSION.sha256'
         }
       }
     }
-    stage('clean up') {
-      steps {
-        sh '[ -f VERSION.sha256.tmp ] && rm VERSION.sha256.tmp'
-      }
-    }
     stage('git-commit') {
+      when { changeset "VERSION.sha256"}
       steps {
         sh 'git config user.email "robin@mordasiewicz.com"'
         sh 'git config user.name "Robin Mordasiewicz"'
