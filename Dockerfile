@@ -2,7 +2,7 @@ FROM ubuntu:latest
 
 RUN apt-get --yes update \
     && apt-get --yes upgrade \
-    && apt -y install net-tools dnsutils iputils-ping iproute2 net-tools ethtool curl vim skopeo
+    && apt -y install net-tools dnsutils iputils-ping iproute2 net-tools ethtool curl vim
 
 RUN . /etc/os-release \
     && echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_${VERSION_ID}/ /" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list \
