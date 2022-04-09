@@ -59,7 +59,7 @@ pipeline {
       steps {
         script {
           sh '''
-            git status --porcelain || echo "clean" || echo "changed"
+            git status --porcelain && echo "clean" || echo "changed"
             git status --porcelain || git config user.email "robin@mordasiewicz.com"
             git status --porcelain || git config user.name "Robin Mordasiewicz"
             git status --porcelain || git add .
