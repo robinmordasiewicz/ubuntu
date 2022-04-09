@@ -2,6 +2,7 @@ FROM ubuntu:latest
 
 RUN apt-get --yes update \
     && apt-get --yes upgrade \
+    && apt -y install apt-utils \
     && apt -y install net-tools dnsutils iputils-ping iproute2 net-tools ethtool curl vim sudo gnupg2
 
 RUN . /etc/os-release \
