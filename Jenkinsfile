@@ -86,7 +86,7 @@ pipeline {
         withCredentials([gitUsernamePassword(credentialsId: 'github-pat', gitToolName: 'git')]) {
           // sh 'git diff --quiet && git diff --staged --quiet || git push origin main'
           // sh 'git push origin main'
-          sh 'git push'
+          sh 'git push origin HEAD:main'
         }
       }
     }
