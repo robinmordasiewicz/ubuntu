@@ -50,12 +50,21 @@ pipeline {
           sh 'echo "--------------sha from git repo-----------------------"'
           sh 'cat VERSION.sha256'
           sh 'skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` > /dev/null && skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` | jq ".Digest" > VERSION.sha256 || echo "create new container: `cat VERSION`" > VERSION.sha256'
-        sh 'git config user.email "robin@mordasiewicz.com"'
-        sh 'git config user.name "Robin Mordasiewicz"'
-        sh 'git add .'
-        sh 'git commit -m "`cat VERSION`"'
           sh 'echo "--------------sha from after skopeo inspect-----------------------"'
           sh 'cat VERSION.sha256'
+        }
+      }
+    }
+    stage('git status') {
+      steps {
+        script {
+          sh '''
+            git status --porcelain || echo "clean" || echo "changed"
+            git status --porcelain || git config user.email "robin@mordasiewicz.com"
+            git status --porcelain || git config user.name "Robin Mordasiewicz"
+            git status --porcelain || git add .
+            git status --porcelain || git commit -m "`cat VERSION`"
+          '''
         }
       }
     }
@@ -92,15 +101,6 @@ pipeline {
                 }
                 }
         }
-    }
-    stage('git status') {
-      steps {
-        script {
-          sh '''
-            git status --porcelain && echo "clean" || echo "changed"
-          '''
-        }
-      }
     }
     stage('Push Container') {
       when { changeset "VERSION"}
