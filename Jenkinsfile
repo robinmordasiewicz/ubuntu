@@ -57,7 +57,7 @@ pipeline {
     }
     stage("Test changeset") {
         when {
-            changeset "**"
+            changeset "*.sha256"
         }
         steps {
             script {
@@ -79,7 +79,7 @@ pipeline {
         }
     }
     stage('Push Container') {
-      when { changeset "**"}
+      when { changeset "*.sha256"}
       steps {
         container(name: 'kaniko', shell: '/busybox/sh') {
           script {
@@ -95,7 +95,7 @@ pipeline {
       }
     }
     stage('Get sha') {
-      when { changeset "**"}
+      when { changeset "*.sha256"}
       steps {
           sh 'echo "--------------before getting latest sha-----------------------"'
           sh 'cat VERSION.sha256'
@@ -107,7 +107,7 @@ pipeline {
       }
     }
     stage('git-commit') {
-      when { changeset "**"}
+      when { changeset "*.sha256"}
       steps {
         sh 'git config user.email "robin@mordasiewicz.com"'
         sh 'git config user.name "Robin Mordasiewicz"'
