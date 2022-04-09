@@ -62,7 +62,7 @@ pipeline {
       }
     }
     stage('Get sha') {
-      when { changeset "VERSION.sha256"}
+      when { changeset "**"}
       steps {
           sh 'cat VERSION.sha256'
         container('ubuntu') {
@@ -72,7 +72,7 @@ pipeline {
       }
     }
     stage('git-commit') {
-      when { changeset "VERSION.sha256"}
+      when { changeset "**"}
       steps {
         sh 'git config user.email "robin@mordasiewicz.com"'
         sh 'git config user.name "Robin Mordasiewicz"'
