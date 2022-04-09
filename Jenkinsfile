@@ -41,7 +41,7 @@ pipeline {
         container('ubuntu') {
           sh 'skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` > /dev/null && skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` | jq ".Digest" > VERSION.sha256 || echo "create new container: `cat VERSION`" > VERSION.sha256.tmp'
         }
-        sh 'ls -al'
+        sh 'git status'
       }
     }
     stage('Push Container') {
@@ -63,7 +63,9 @@ pipeline {
     stage('Get sha') {
       steps {
         container('ubuntu') {
+          sh 'git status'
           sh 'skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` > /dev/null && skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` | jq ".Digest" > VERSION.sha256 || echo "create new container: `cat VERSION`" > VERSION.sha256'
+          sh 'git status'
         }
       }
     }
@@ -78,6 +80,7 @@ pipeline {
         sh 'git config user.name "Robin Mordasiewicz"'
         sh 'git add -A'
         sh 'git diff --quiet && git diff --staged --quiet || git commit -am "New Container HASH: `cat VERSION`"'
+        sh 'git status'
         withCredentials([gitUsernamePassword(credentialsId: 'github-pat', gitToolName: 'git')]) {
           sh 'git diff --quiet && git diff --staged --quiet || git push'
         }
