@@ -44,7 +44,7 @@ pipeline {
       }
     }
     stage('Push Container') {
-      //when { changeset "VERSION.sha256.tmp"}
+      when { changeset "VERSION.sha256.tmp"}
       steps {
         container(name: 'kaniko', shell: '/busybox/sh') {
           script {
