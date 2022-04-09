@@ -85,10 +85,10 @@ pipeline {
     stage('Hello') {
         steps {
             script {
-                if (env.BRANCH_NAME == 'main') {
-                    echo 'Hello from main branch'
+                if (`git status --porcelain`) {
+                    echo 'git status clean'
                 }  else {
-                    sh "echo 'Hello from ${env.BRANCH_NAME} branch!'"
+                    sh "echo 'git status changed"
                 }
                 }
         }
