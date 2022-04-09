@@ -53,6 +53,7 @@ pipeline {
         sh 'git config user.email "robin@mordasiewicz.com"'
         sh 'git config user.name "Robin Mordasiewicz"'
         sh 'git add .'
+        sh 'git commit -m "`cat VERSION`"'
           sh 'echo "--------------sha from after skopeo inspect-----------------------"'
           sh 'cat VERSION.sha256'
         }
@@ -60,7 +61,7 @@ pipeline {
     }
     stage("Test changeset") {
         when {
-            changeset "*.sha256"
+            changeset "*"
         }
         steps {
             script {
@@ -82,7 +83,7 @@ pipeline {
         }
     }
     stage('Push Container') {
-      when { changeset "*.sha256"}
+      when { changeset "VERSION.sha256"}
       steps {
         container(name: 'kaniko', shell: '/busybox/sh') {
           script {
@@ -98,7 +99,7 @@ pipeline {
       }
     }
     stage('Get sha') {
-      when { changeset "*.sha256"}
+      when { changeset "VERSION.sha256"}
       steps {
           sh 'echo "--------------before getting latest sha-----------------------"'
           sh 'cat VERSION.sha256'
@@ -110,7 +111,7 @@ pipeline {
       }
     }
     stage('git-commit') {
-      when { changeset "*.sha256"}
+      when { changeset "VERSION.sha256"}
       steps {
         sh 'git config user.email "robin@mordasiewicz.com"'
         sh 'git config user.name "Robin Mordasiewicz"'
