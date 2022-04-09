@@ -85,7 +85,8 @@ pipeline {
         sh 'git commit -m "New Container HASH: `cat VERSION`"'
         withCredentials([gitUsernamePassword(credentialsId: 'github-pat', gitToolName: 'git')]) {
           // sh 'git diff --quiet && git diff --staged --quiet || git push origin main'
-          sh 'git push origin main'
+          // sh 'git push origin main'
+          sh 'git push'
         }
       }
     }
