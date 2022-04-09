@@ -86,7 +86,7 @@ pipeline {
         steps {
             script {
                 if (1) {
-                    echo 'git status clean'
+                    sh "echo 'git status same"
                 }  else {
                     sh "echo 'git status changed"
                 }
@@ -97,9 +97,7 @@ pipeline {
       steps {
         script {
           sh '''
-            git status --porcelain
-            git status
-            echo 'Hello from main branch'
+            git status --porcelain && echo "clean" || echo "changed"
           '''
         }
       }
