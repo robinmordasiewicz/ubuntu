@@ -39,7 +39,8 @@ pipeline {
     stage('Get sha256 of version') {
       steps {
         container('ubuntu') {
-          sh 'skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` | jq ".Digest" > VERSION.sha256'
+          // sh 'skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` | jq ".Digest" > VERSION.sha256'
+          sh 'ls -al'
         }
       }
     }
