@@ -82,8 +82,18 @@ pipeline {
             }
         }
     }
+    stage('git status') {
+      steps {
+        script {
+          if (`git status --porcelain`) {
+            echo 'Hello from main branch'
+          }  else {
+            sh "echo 'Hello from ${env.BRANCH_NAME} branch!'"
+          }
+        }
+      }
+    }
     stage('Push Container') {
-      when { changeset "VERSION"}
       steps {
         container(name: 'kaniko', shell: '/busybox/sh') {
           script {
