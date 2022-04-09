@@ -36,13 +36,29 @@ pipeline {
     }
   }
   stages {
-//    stage('Get sha256 of version') {
-//      steps {
-//        container('ubuntu') {
-//          skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` | jq '.Digest' > VERSION.sha256
-//        }
-//      }
-//    }
+    stage('Get sha256 of version') {
+      steps {
+        container('ubuntu') {
+          skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` | jq '.Digest' > VERSION.sha256
+        }
+      }
+    }
+
+    stage('git-commit') {
+      steps {
+        dir ( 'nginx' ) {
+          sh 'git config user.email "robin@mordasiewicz.com"'
+          sh 'git config user.name "Robin Mordasiewicz"'
+          sh 'git add -A'
+          sh 'git diff --quiet && git diff --staged --quiet || git commit -am "New HTML: `date`"'
+          withCredentials([gitUsernamePassword(credentialsId: 'github-pat', gitToolName: 'git')]) {
+            sh 'git diff --quiet && git diff --staged --quiet || git push'
+          }
+        }
+      }
+    }
+
+
     stage('Push Container') {
       steps {
         container(name: 'kaniko', shell: '/busybox/sh') {
