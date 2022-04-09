@@ -59,37 +59,11 @@ pipeline {
       steps {
         script {
           sh '''
-            git status --porcelain && echo "clean" || echo "changed"
-            git status --porcelain || git config user.email "robin@mordasiewicz.com"
-            git status --porcelain || git config user.name "Robin Mordasiewicz"
-            git status --porcelain || git add .
-            git status --porcelain || git commit -m "`cat VERSION`"
+            git diff --quiet && git diff --staged --quiet || echo "Committing changes `cat VERSION"
+            git diff --quiet && git diff --staged --quiet || git commit -am "Ubuntu Container: `cat VERSION`"
           '''
         }
       }
-    }
-    stage("Test changeset") {
-        when {
-            changeset "*"
-        }
-        steps {
-            script {
-                def changeLogSets = currentBuild.changeSets
-                echo("changeSets=" + changeLogSets)
-                for (int i = 0; i < changeLogSets.size(); i++) {
-                    def entries = changeLogSets[i].items
-                    for (int j = 0; j < entries.length; j++) {
-                        def entry = entries[j]
-                        echo "${entry.commitId} by ${entry.author} on ${new Date(entry.timestamp)}: ${entry.msg}"
-                        def files = new ArrayList(entry.affectedFiles)
-                        for (int k = 0; k < files.size(); k++) {
-                            def file = files[k]
-                            echo " ${file.editType.name} ${file.path}"
-                        }
-                    }
-                }
-            }
-        }
     }
     stage('Hello') {
         steps {
