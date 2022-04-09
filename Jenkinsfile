@@ -83,7 +83,7 @@ pipeline {
         }
     }
     stage('Push Container') {
-      when { changeset "VERSION.sha256"}
+      when { changeset "VERSION"}
       steps {
         container(name: 'kaniko', shell: '/busybox/sh') {
           script {
@@ -99,7 +99,7 @@ pipeline {
       }
     }
     stage('Get sha') {
-      when { changeset "VERSION.sha256"}
+      when { changeset "VERSION"}
       steps {
           sh 'echo "--------------before getting latest sha-----------------------"'
           sh 'cat VERSION.sha256'
