@@ -86,11 +86,12 @@ pipeline {
       steps {
         script {
           sh '''
-            if (`git status --porcelain`) {
+            if [`git status --porcelain`]
+            then 
               echo 'Hello from main branch'
-            }  else {
+            else
               sh "echo 'Hello from ${env.BRANCH_NAME} branch!'"
-            }
+            fi
           '''
         }
       }
