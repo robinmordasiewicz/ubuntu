@@ -50,6 +50,9 @@ pipeline {
           sh 'echo "--------------sha from git repo-----------------------"'
           sh 'cat VERSION.sha256'
           sh 'skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` > /dev/null && skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` | jq ".Digest" > VERSION.sha256 || echo "create new container: `cat VERSION`" > VERSION.sha256'
+        sh 'git config user.email "robin@mordasiewicz.com"'
+        sh 'git config user.name "Robin Mordasiewicz"'
+        sh 'git add .'
           sh 'echo "--------------sha from after skopeo inspect-----------------------"'
           sh 'cat VERSION.sha256'
         }
