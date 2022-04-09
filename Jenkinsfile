@@ -85,7 +85,7 @@ pipeline {
     stage('Hello') {
         steps {
             script {
-                if (`git status --porcelain`) {
+                if (1) {
                     echo 'git status clean'
                 }  else {
                     sh "echo 'git status changed"
@@ -105,6 +105,7 @@ pipeline {
       }
     }
     stage('Push Container') {
+      when { changeset "VERSION"}
       steps {
         container(name: 'kaniko', shell: '/busybox/sh') {
           script {
