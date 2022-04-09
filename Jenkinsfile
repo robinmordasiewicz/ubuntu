@@ -39,8 +39,10 @@ pipeline {
     stage('Check repo to see if container is absent') {
       steps {
         container('ubuntu') {
+          sh 'echo "--------------sha from git repo-----------------------"'
           sh 'cat VERSION.sha256'
           sh 'skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` > /dev/null && skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` | jq ".Digest" > VERSION.sha256 || echo "create new container: `cat VERSION`" > VERSION.sha256'
+          sh 'echo "--------------sha from after skopeo inspect-----------------------"'
           sh 'cat VERSION.sha256'
         }
       }
@@ -64,10 +66,12 @@ pipeline {
     stage('Get sha') {
       when { changeset "**"}
       steps {
+          sh 'echo "--------------before getting latest sha-----------------------"'
           sh 'cat VERSION.sha256'
         container('ubuntu') {
           sh 'skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` > /dev/null && skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` | jq ".Digest" > VERSION.sha256 || echo "create new container: `cat VERSION`" > VERSION.sha256'
         }
+          sh 'echo "--------------after getting latest sha-----------------------"'
           sh 'cat VERSION.sha256'
       }
     }
