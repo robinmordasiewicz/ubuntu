@@ -12,4 +12,4 @@ kubectl exec --namespace r-mordasiewicz -it ubuntu -c ubuntu -- /bin/bash
 
 skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` | jq ".Digest" > VERSION.sha256
 
-argocd
+argocd command line
