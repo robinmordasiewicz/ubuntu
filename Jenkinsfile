@@ -36,26 +36,15 @@ pipeline {
     }
   }
   stages {
-    stage('Get sha256 of version') {
+    stage('Check repo to see if container is absent') {
       steps {
         container('ubuntu') {
-          // sh 'skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` | jq ".Digest" > VERSION.sha256'
-          sh 'ls -al'
-        }
-      }
-    }
-    stage('git-commit') {
-      steps {
-        sh 'git config user.email "robin@mordasiewicz.com"'
-        sh 'git config user.name "Robin Mordasiewicz"'
-        sh 'git add -A'
-        sh 'git diff --quiet && git diff --staged --quiet || git commit -am "New HTML: `date`"'
-        withCredentials([gitUsernamePassword(credentialsId: 'github-pat', gitToolName: 'git')]) {
-          sh 'git diff --quiet && git diff --staged --quiet || git push'
+          sh 'skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` && skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` | jq ".Digest" > VERSION.sha256 || echo "create new container" > VERSION.sha256'
         }
       }
     }
     stage('Push Container') {
+      when { changeset "VERSION.sha256"}
       steps {
         container(name: 'kaniko', shell: '/busybox/sh') {
           script {
@@ -67,6 +56,24 @@ pipeline {
                              --cache=true
             '''
           }
+        }
+      }
+    }
+    stage('Get sha') {
+      steps {
+        container('ubuntu') {
+          sh 'skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` && skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` | jq ".Digest" > VERSION.sha256 || echo "create new container" > VERSION.sha256'
+        }
+      }
+    }
+    stage('git-commit') {
+      steps {
+        sh 'git config user.email "robin@mordasiewicz.com"'
+        sh 'git config user.name "Robin Mordasiewicz"'
+        sh 'git add -A'
+        sh 'git diff --quiet && git diff --staged --quiet || git commit -am "New HTML: `date`"'
+        withCredentials([gitUsernamePassword(credentialsId: 'github-pat', gitToolName: 'git')]) {
+          sh 'git diff --quiet && git diff --staged --quiet || git push'
         }
       }
     }
