@@ -73,7 +73,7 @@ pipeline {
     }
     stage('cleanup tmp'){
       steps {
-        sh 'rm BUILDNEWCONTAINER.txt'
+        sh '[ -f BUILDNEWCONTAINER.txt ] && rm BUILDNEWCONTAINER.txt || exit 0'
       }
     }
     stage('Get sha') {
