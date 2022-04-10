@@ -1,7 +1,7 @@
 pipeline {
   options {
     disableConcurrentBuilds()
-    skipDefaultCheckout(true)
+//    skipDefaultCheckout(true)
   }
   environment {
     BUID = 'true'
@@ -40,17 +40,18 @@ pipeline {
     }
   }
   stages {
-    stage('INIT') {
-      steps {
-        cleanWs()
-        checkout scm
-        echo "Building ${env.JOB_NAME}..."
-      }
-    }
+//    stage('INIT') {
+//      steps {
+//        cleanWs()
+//        checkout scm
+//        echo "Building ${env.JOB_NAME}..."
+//      }
+//    }
     stage('Check repo to see if container is absent') {
       steps {
         container('ubuntu') {
-          sh 'skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` > /dev/null && skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` | jq ".Digest" > VERSION.sha256 || echo "create new container: `cat VERSION`" > BUILDNEWCONTAINER.txt'
+          //sh 'skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` > /dev/null && skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` | jq ".Digest" > VERSION.sha256 || echo "create new container: `cat VERSION`" > BUILDNEWCONTAINER.txt'
+          sh 'skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` > /dev/null || echo "create new container: `cat VERSION`" > BUILDNEWCONTAINER.txt'
         }
       }
     }
@@ -71,33 +72,33 @@ pipeline {
         }
       }
     }
-    stage('cleanup tmp'){
-      steps {
-        sh '[ -f BUILDNEWCONTAINER.txt ] && rm BUILDNEWCONTAINER.txt || exit 0'
-      }
-    }
-    stage('Get sha') {
-      steps {
-        container('ubuntu') {
-          sh 'skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` > /dev/null && skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` | jq ".Digest" > VERSION.sha256 || echo "create new container: `cat VERSION`" > VERSION.sha256'
-        }
-      }
-    }
-    stage('git-commit') {
-      steps {
-        sh 'git config user.email "robin@mordasiewicz.com"'
-        sh 'git config user.name "Robin Mordasiewicz"'
-       // sh 'git add -u'
-       // sh 'git diff --quiet && git diff --staged --quiet || git commit -m "`cat VERSION`"'
-        sh 'git add . && git diff --staged --quiet || git commit -m "`cat VERSION`"'
-        withCredentials([gitUsernamePassword(credentialsId: 'github-pat', gitToolName: 'git')]) {
-          // sh 'git diff --quiet && git diff --staged --quiet || git push origin HEAD:main'
-          // sh 'git diff --quiet HEAD || git push origin HEAD:main'
-          sh 'git push origin HEAD:main'
-        }
-      }
-    }
-  }
+//    stage('cleanup tmp'){
+//      steps {
+//        sh '[ -f BUILDNEWCONTAINER.txt ] && rm BUILDNEWCONTAINER.txt || exit 0'
+//      }
+//    }
+//    stage('Get sha') {
+//      steps {
+//        container('ubuntu') {
+//          sh 'skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` > /dev/null && skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` | jq ".Digest" > VERSION.sha256 || echo "create new container: `cat VERSION`" > VERSION.sha256'
+//        }
+//      }
+//    }
+//    stage('git-commit') {
+//     steps {
+//        sh 'git config user.email "robin@mordasiewicz.com"'
+//        sh 'git config user.name "Robin Mordasiewicz"'
+//       // sh 'git add -u'
+//       // sh 'git diff --quiet && git diff --staged --quiet || git commit -m "`cat VERSION`"'
+//        sh 'git add . && git diff --staged --quiet || git commit -m "`cat VERSION`"'
+//        withCredentials([gitUsernamePassword(credentialsId: 'github-pat', gitToolName: 'git')]) {
+//          // sh 'git diff --quiet && git diff --staged --quiet || git push origin HEAD:main'
+//          // sh 'git diff --quiet HEAD || git push origin HEAD:main'
+//          sh 'git push origin HEAD:main'
+//        }
+//      }
+//    }
+//  }
   post {
     always {
       cleanWs(cleanWhenNotBuilt: false,
