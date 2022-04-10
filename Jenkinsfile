@@ -61,12 +61,6 @@ pipeline {
         // FOOBAR = sh(script: 'echo "true"', , returnStdout: true).trim()
          FOOBAR = "true"
       }
-      steps {
-        sh 'git config user.email "robin@mordasiewicz.com"'
-        sh 'git config user.name "Robin Mordasiewicz"'
-        sh 'git diff --quiet && git diff --staged --quiet || git commit -am "`cat VERSION`"'
-        sh 'git diff --quiet && git diff --staged --quiet || 
-        }
     }
 
     stage('Push Container') {
