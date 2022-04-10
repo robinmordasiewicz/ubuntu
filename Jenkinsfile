@@ -37,6 +37,7 @@ pipeline {
   }
   stages {
     stage('Check repo to see if container is absent') {
+      when { changeset "VERSION"}
       steps {
         container('ubuntu') {
           sh 'skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` > /dev/null || echo "create new container: `cat VERSION`" > BUILDNEWCONTAINER.txt'
@@ -44,6 +45,7 @@ pipeline {
       }
     }
     stage('Build/Push Container') {
+      when { changeset "VERSION"}
       steps {
         container(name: 'kaniko', shell: '/busybox/sh') {
           script {
