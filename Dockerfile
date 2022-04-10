@@ -3,7 +3,6 @@ FROM ubuntu:latest
 ENV TZ="America/Toronto"
 ARG DEBIAN_FRONTEND=noninteractive
 
-
 RUN apt-get --yes update \
     && apt-get --yes upgrade \
     && apt -y install apt-utils \
