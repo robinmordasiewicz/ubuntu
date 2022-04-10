@@ -44,7 +44,7 @@ pipeline {
         echo "Building ${env.JOB_NAME}..."
       }
     }
-    stage('Dockerfile changed') {
+    stage('Dockerfile change') {
       when {
         changeset "Dockerfile"
       }
@@ -64,7 +64,7 @@ pipeline {
         }
       }
     }
-    stage('Check repo to see if container is absent') {
+    stage('Check repo for container') {
       when { changeset "VERSION"}
       steps {
         container('ubuntu') {
