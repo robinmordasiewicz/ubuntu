@@ -43,12 +43,24 @@ pipeline {
         checkout scm
       }
     }
+    stage('GUI Build') {
+      when {
+        beforeAgent true
+        anyOf {
+          triggeredBy cause: 'UserIdCause'
+        }
+      }
+      steps {
+        container('ubuntu') {
+          sh 'sh increment-version.sh'
+        }
+      }
+    }
     stage('Increment Version') {
       when {
         beforeAgent true
         anyOf {
           changeset "Dockerfile"
-          triggeredBy cause: 'UserIdCause'
         }
       }
       steps {
