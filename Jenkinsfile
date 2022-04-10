@@ -56,7 +56,7 @@ pipeline {
         }
       }
     }
-    stage('Increment Version') {
+    stage('Dockerfile update') {
       when {
         beforeAgent true
         anyOf {
