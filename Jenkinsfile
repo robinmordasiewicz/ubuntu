@@ -61,6 +61,9 @@ pipeline {
         // FOOBAR = sh(script: 'echo "true"', , returnStdout: true).trim()
          FOOBAR = "true"
       }
+      steps {
+        sh 'ls -al'
+      }
     }
 
     stage('Push Container') {
