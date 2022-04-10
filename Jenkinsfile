@@ -3,6 +3,9 @@ pipeline {
     disableConcurrentBuilds()
     skipDefaultCheckout(true)
   }
+  environment {
+    BUID = 'true'
+  }
   agent {
     kubernetes {
       yaml '''
@@ -51,30 +54,25 @@ pipeline {
         }
       }
     }
-    stage('git status') {
-      steps {
-        script {
-          sh '''
-            git config user.email "robin@mordasiewicz.com"
-            git config user.name "Robin Mordasiewicz"
-            git diff --quiet && git diff --staged --quiet || echo "`cat VERSION`"
-            git diff --quiet && git diff --staged --quiet || git commit -am "`cat VERSION`"
-          '''
-        }
-      }
-    }
 
     stage('Example') {
-        steps {
-            echo 'Hello World'
-            sh 'pwd'
-            script {
-              sh 'ls -al'
-            }
+      environment {
+         // FOOBAR = sh(script: 'pwd', , returnStdout: true).trim()
+        // FOOBAR = sh(script: 'echo "true"', , returnStdout: true).trim()
+         FOOBAR = "true"
+      }
+      steps {
+        sh 'git config user.email "robin@mordasiewicz.com"'
+        sh 'git config user.name "Robin Mordasiewicz"'
+        sh 'git diff --quiet && git diff --staged --quiet || git commit -am "`cat VERSION`"'
+        sh 'git diff --quiet && git diff --staged --quiet || 
         }
     }
 
     stage('Push Container') {
+      when {
+        environment(name: "FOOBAR", value: "true")
+      }
       steps {
         container(name: 'kaniko', shell: '/busybox/sh') {
           script {
