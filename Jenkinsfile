@@ -59,7 +59,7 @@ pipeline {
       environment {
          // FOOBAR = sh(script: 'pwd', , returnStdout: true).trim()
         // FOOBAR = sh(script: 'echo "true"', , returnStdout: true).trim()
-         FOOBAR = "true"
+         BUILD = "false"
       }
       steps {
         sh 'ls -al'
@@ -68,7 +68,7 @@ pipeline {
 
     stage('Push Container') {
       when {
-        environment(name: "FOOBAR", value: "true")
+        environment(name: "BUILD", value: "true")
       }
       steps {
         container(name: 'kaniko', shell: '/busybox/sh') {
