@@ -30,4 +30,3 @@ RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/s
     && helm repo add robinmordasiewicz https://robinmordasiewicz.github.io/helm-charts \
     && helm repo update
 
-COPY VERSION .
