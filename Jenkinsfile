@@ -85,24 +85,14 @@ pipeline {
     }
     stage('git-commit') {
       steps {
-        sh 'git status'
-        sh 'echo "------------------ BEFORE ---------------"'
         sh 'git config user.email "robin@mordasiewicz.com"'
         sh 'git config user.name "Robin Mordasiewicz"'
-        sh 'git add .'
         sh 'git add -u'
-       //  sh 'git diff --quiet && git diff --staged --quiet || git commit -am "`cat VERSION`"'
-        sh 'git status'
         sh 'git diff --quiet && git diff --staged --quiet || git commit -m "`cat VERSION`"'
-        sh 'git status'
         withCredentials([gitUsernamePassword(credentialsId: 'github-pat', gitToolName: 'git')]) {
-          sh 'echo "------------------ push ---------------"'
           // sh 'git diff --quiet && git diff --staged --quiet || git push origin HEAD:main'
-          sh 'git status'
-          sh 'git push origin HEAD:main'
+          sh 'git diff --quiet HEAD || git push origin HEAD:main'
         }
-        sh 'echo "------------------ AFTER ---------------"'
-        sh 'git status'
       }
     }
   }
