@@ -64,7 +64,8 @@ pipeline {
                              --context=git://github.com/robinmordasiewicz/ubuntu.git \
                              --destination=robinhoodis/ubuntu:`cat VERSION` \
                              --destination=robinhoodis/ubuntu:latest \
-                             --cache=true
+                             --cache=true || \
+            exit 0
             '''
           }
         }
