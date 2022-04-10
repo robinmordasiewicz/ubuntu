@@ -67,12 +67,9 @@ pipeline {
     stage('Example') {
         steps {
             echo 'Hello World'
-
+            sh 'pwd'
             script {
-                def browsers = ['chrome', 'firefox']
-                for (int i = 0; i < browsers.size(); ++i) {
-                    echo "Testing the ${browsers[i]} browser"
-                }
+              sh 'ls -al'
             }
         }
     }
