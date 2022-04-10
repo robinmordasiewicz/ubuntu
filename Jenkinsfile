@@ -43,7 +43,7 @@ pipeline {
         checkout scm
       }
     }
-    stage('Dockerfile change') {
+    stage('Increment Version') {
       when {
         beforeAgent true
         anyOf {
@@ -55,20 +55,16 @@ pipeline {
         container('ubuntu') {
           sh 'sh increment-version.sh'
         }
-        sh 'git config user.email "robin@mordasiewicz.com"'
-        sh 'git config user.name "Robin Mordasiewicz"'
-        // sh 'git add -u'
-        // sh 'git diff --quiet && git diff --staged --quiet || git commit -m "`cat VERSION`"'
-        sh 'git add . && git diff --staged --quiet || git commit -m "`cat VERSION`"'
-        withCredentials([gitUsernamePassword(credentialsId: 'github-pat', gitToolName: 'git')]) {
-          // sh 'git diff --quiet && git diff --staged --quiet || git push origin HEAD:main'
-          // sh 'git diff --quiet HEAD || git push origin HEAD:main'
-          sh 'git push origin HEAD:main'
-        }
       }
     }
     stage('Check repo for container') {
-      when { changeset "VERSION"}
+      when {
+        beforeAgent true
+        anyOf {
+          changeset "VERSION"
+          triggeredBy cause: 'UserIdCause'
+        }
+      }
       steps {
         container('ubuntu') {
           sh 'skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` > /dev/null || echo "create new container: `cat VERSION`" > BUILDNEWCONTAINER.txt'
@@ -76,7 +72,13 @@ pipeline {
       }
     }
     stage('Build/Push Container') {
-      when { changeset "VERSION"}
+      when {
+        beforeAgent true
+        anyOf {
+          changeset "VERSION"
+          triggeredBy cause: 'UserIdCause'
+        }
+      }
       steps {
         container(name: 'kaniko', shell: '/busybox/sh') {
           script {
@@ -89,6 +91,27 @@ pipeline {
                              --cache=true
             '''
           }
+        }
+      }
+    }
+    stage('Commit new VERSION') {
+      when {
+        beforeAgent true
+        anyOf {
+          changeset "Dockerfile"
+          triggeredBy cause: 'UserIdCause'
+        }
+      }
+      steps {
+        sh 'git config user.email "robin@mordasiewicz.com"'
+        sh 'git config user.name "Robin Mordasiewicz"'
+        // sh 'git add -u'
+        // sh 'git diff --quiet && git diff --staged --quiet || git commit -m "`cat VERSION`"'
+        sh 'git add . && git diff --staged --quiet || git commit -m "`cat VERSION`"'
+        withCredentials([gitUsernamePassword(credentialsId: 'github-pat', gitToolName: 'git')]) {
+          // sh 'git diff --quiet && git diff --staged --quiet || git push origin HEAD:main'
+          // sh 'git diff --quiet HEAD || git push origin HEAD:main'
+          sh 'git push origin HEAD:main'
         }
       }
     }
