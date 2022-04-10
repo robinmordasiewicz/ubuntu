@@ -7,3 +7,5 @@ CONTAINERVERSION=`cat VERSION | awk -F. -v OFS=. 'NF==1{print ++$NF}; NF>1{if(le
 echo $CONTAINERVERSION > VERSION
 
 cat deployment.yaml | sed -re "s/image:[[:space:]]robinhoodis\/ubuntu:.*/image: robinhoodis\/ubuntu:${CONTAINERVERSION}/" > deployment.yaml.tmp && mv deployment.yaml.tmp deployment.yaml
+
+exit 0

@@ -14,3 +14,4 @@ skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` | jq ".Digest
 
 argocd command line
 
+argocd login
