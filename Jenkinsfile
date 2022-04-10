@@ -59,7 +59,7 @@ pipeline {
       steps {
         script {
           sh '''
-            git diff --quiet && git diff --staged --quiet || echo "Committing changes `cat VERSION"
+            git diff --quiet && git diff --staged --quiet || echo "Committing changes `cat VERSION`"
             git diff --quiet && git diff --staged --quiet || git commit -am "Ubuntu Container: `cat VERSION`"
           '''
         }
