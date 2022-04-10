@@ -77,14 +77,13 @@ pipeline {
       steps {
         container(name: 'kaniko', shell: '/busybox/sh') {
           script {
-            sh '''
-            [ -f BUILDNEWCONTAINER.txt ] && \
+            sh ''' 
+            [ ! -f BUILDNEWCONTAINER.txt ] || \
             /kaniko/executor --dockerfile=Dockerfile \
                              --context=git://github.com/robinmordasiewicz/ubuntu.git \
                              --destination=robinhoodis/ubuntu:`cat VERSION` \
                              --destination=robinhoodis/ubuntu:latest \
-                             --cache=true || \
-            exit 0
+                             --cache=true
             '''
           }
         }
