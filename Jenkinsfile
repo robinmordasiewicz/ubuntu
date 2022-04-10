@@ -46,7 +46,11 @@ pipeline {
     }
     stage('Dockerfile change') {
       when {
-        changeset "Dockerfile"
+        beforeAgent true
+        anyOf {
+          changeset "Dockerfile"
+          triggeredBy cause: 'UserIdCause'
+        }
       }
       steps {
         container('ubuntu') {
