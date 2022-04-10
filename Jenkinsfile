@@ -71,8 +71,7 @@ pipeline {
             script {
                 def browsers = ['chrome', 'firefox']
                 for (int i = 0; i < browsers.size(); ++i) {
-                    pwd
-                    ls -al
+                    sh 'ls -al'
                     echo "Testing the ${browsers[i]} browser"
                 }
             }
