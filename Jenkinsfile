@@ -67,13 +67,11 @@ pipeline {
     }
 
     stage('Push Container') {
-      when {
-        sh(script: 'echo "true"', , returnStdout: true).trim()
-      }
       steps {
         container(name: 'kaniko', shell: '/busybox/sh') {
           script {
             sh '''
+            [ -f VERSION ] && \
             /kaniko/executor --dockerfile=Dockerfile \
                              --context=git://github.com/robinmordasiewicz/ubuntu.git \
                              --destination=robinhoodis/ubuntu:`cat VERSION` \
