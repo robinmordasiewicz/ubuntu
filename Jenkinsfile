@@ -68,7 +68,7 @@ pipeline {
 
     stage('Push Container') {
       when {
-        environment(name: "BUILD", value: "true")
+        environment(name: "BUILD", value: "false")
       }
       steps {
         container(name: 'kaniko', shell: '/busybox/sh') {
