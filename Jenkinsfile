@@ -50,28 +50,16 @@ pipeline {
     stage('Check repo to see if container is absent') {
       steps {
         container('ubuntu') {
-          sh 'skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` > /dev/null && skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` | jq ".Digest" > VERSION.sha256 || echo "create new container: `cat VERSION`" > VERSION.sha256'
+          sh 'skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` > /dev/null && skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` | jq ".Digest" > VERSION.sha256 || echo "create new container: `cat VERSION`" > BUILDNEWCONTAINER.txt'
         }
       }
     }
-
-    stage('Example') {
-      environment {
-         // FOOBAR = sh(script: 'pwd', , returnStdout: true).trim()
-        // FOOBAR = sh(script: 'echo "true"', , returnStdout: true).trim()
-         BUILD = "false"
-      }
-      steps {
-        sh 'ls -al'
-      }
-    }
-
     stage('Push Container') {
       steps {
         container(name: 'kaniko', shell: '/busybox/sh') {
           script {
             sh '''
-            [ -f VERSION ] && \
+            [ -f BUILDNEWCONTAINER.txt ] && \
             /kaniko/executor --dockerfile=Dockerfile \
                              --context=git://github.com/robinmordasiewicz/ubuntu.git \
                              --destination=robinhoodis/ubuntu:`cat VERSION` \
@@ -82,8 +70,12 @@ pipeline {
         }
       }
     }
+    stage('cleanup tmp'){
+      steps {
+        sh 'rm BUILDNEWCONTAINER.txt'
+      }
+    }
     stage('Get sha') {
-      when { changeset "VERSION"}
       steps {
         container('ubuntu') {
           sh 'skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` > /dev/null && skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` | jq ".Digest" > VERSION.sha256 || echo "create new container: `cat VERSION`" > VERSION.sha256'
@@ -91,17 +83,13 @@ pipeline {
       }
     }
     stage('git-commit') {
-      when { changeset "VERSION.sha256"}
       steps {
         sh 'git config user.email "robin@mordasiewicz.com"'
         sh 'git config user.name "Robin Mordasiewicz"'
         sh 'git add .'
-        // sh 'git diff --quiet && git diff --staged --quiet || git commit -am "New Container HASH: `cat VERSION`"'
-        sh 'git commit -m "`cat VERSION`"'
+        sh 'git diff --quiet && git diff --staged --quiet || git commit -am "New Container HASH: `cat VERSION`"'
         withCredentials([gitUsernamePassword(credentialsId: 'github-pat', gitToolName: 'git')]) {
-          // sh 'git diff --quiet && git diff --staged --quiet || git push origin main'
-          // sh 'git push origin main'
-          sh 'git push origin HEAD:main'
+          sh 'git diff --quiet && git diff --staged --quiet || git push origin HEAD:main'
         }
       }
     }
