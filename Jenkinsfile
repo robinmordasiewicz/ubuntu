@@ -1,6 +1,7 @@
 pipeline {
   options {
     disableConcurrentBuilds()
+    skipDefaultCheckout(true)
   }
   agent {
     kubernetes {
@@ -36,6 +37,13 @@ pipeline {
     }
   }
   stages {
+    stage('INIT') {
+      steps {
+        cleanWs()
+        checkout scm
+        echo "Building ${env.JOB_NAME}..."
+      }
+    }
     stage('Dockerfile changed') {
       when {
         changeset "Dockerfile"
