@@ -46,9 +46,9 @@ pipeline {
     stage('Increment VERSION') {
       when {
         beforeAgent true
-        anyOf {
+        allOf {
           changeset "Dockerfile"
-          triggeredBy cause: 'UserIdCause'
+          not {changeset "VERSION"}
         }
       }
       steps {
@@ -63,7 +63,6 @@ pipeline {
         anyOf {
           changeset "VERSION"
           changeset "Dockerfile"
-          triggeredBy cause: 'UserIdCause'
         }
       }
       steps {
@@ -78,7 +77,6 @@ pipeline {
         anyOf {
           changeset "VERSION"
           changeset "Dockerfile"
-          triggeredBy cause: 'UserIdCause'
         }
       }
       steps {
@@ -101,7 +99,6 @@ pipeline {
         beforeAgent true
         anyOf {
           changeset "Dockerfile"
-          triggeredBy cause: 'UserIdCause'
         }
       }
       steps {
