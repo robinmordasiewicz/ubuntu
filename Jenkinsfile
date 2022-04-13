@@ -74,16 +74,16 @@ pipeline {
     stage('Build/Push Container') {
       when {
         beforeAgent true
-        anyOf {
-          changeset "VERSION"
-          changeset "Dockerfile"
+        expression {
+          container('ubuntu') {
+            sh(returnStatus: true, script: 'skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION`') == 1
+          }
         }
       }
       steps {
         container(name: 'kaniko', shell: '/busybox/sh') {
           script {
             sh ''' 
-            [ ! -f BUILDNEWCONTAINER.txt ] || \
             /kaniko/executor --dockerfile=Dockerfile \
                              --context=`pwd` \
                              --destination=robinhoodis/ubuntu:`cat VERSION` \
@@ -97,8 +97,12 @@ pipeline {
     stage('Commit new VERSION') {
       when {
         beforeAgent true
-        anyOf {
-          changeset "Dockerfile"
+        allOf {
+          anyOf {
+            changeset "Dockerfile"
+            changeset "requirements.txt"
+          }
+          not {changeset "VERSION"}
         }
       }
       steps {
