@@ -30,5 +30,6 @@ RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/s
     && helm repo add robinmordasiewicz https://robinmordasiewicz.github.io/helm-charts \
     && helm repo update
 
+RUN groupadd -g 1000 ubuntu
 RUN useradd -rm -d /home/ubuntu -s /bin/bash -g 1000 -G sudo -u 1000 ubuntu
-USER 1000:1000
+USER ubuntu:ubuntu
