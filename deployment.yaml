@@ -6,7 +6,7 @@ metadata:
     app: ubuntu
 spec:
   containers:
-  - image: robinhoodis/ubuntu:0.8.3
+  - image: robinhoodis/ubuntu:0.8.4
     command:
       - "sleep"
       - "604800"
