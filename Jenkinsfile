@@ -57,20 +57,6 @@ pipeline {
         }
       }
     }
-    stage('Check repo for container') {
-      when {
-        beforeAgent true
-        anyOf {
-          changeset "VERSION"
-          changeset "Dockerfile"
-        }
-      }
-      steps {
-        container('ubuntu') {
-          sh 'skopeo inspect docker://docker.io/robinhoodis/ubuntu:`cat VERSION` > /dev/null || echo "create new container: `cat VERSION`" > BUILDNEWCONTAINER.txt'
-        }
-      }
-    }
     stage('Build/Push Container') {
       when {
         beforeAgent true
