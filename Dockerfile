@@ -5,8 +5,8 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get --yes update \
     && apt-get --yes upgrade \
-    && apt -y install apt-utils \
-    && apt -y install net-tools dnsutils iputils-ping iproute2 net-tools ethtool curl vim sudo gnupg2 jq git
+    && apt-get -y install apt-utils \
+    && apt-get -y install net-tools dnsutils iputils-ping iproute2 net-tools ethtool curl vim sudo gnupg2 jq git
 
 RUN . /etc/os-release \
     && echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_${VERSION_ID}/ /" | tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list \
