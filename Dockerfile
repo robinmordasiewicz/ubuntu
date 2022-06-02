@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM ubuntu:focal
 
 ENV TZ="America/Toronto"
 ARG DEBIAN_FRONTEND=noninteractive
